@@ -36,7 +36,15 @@ export async function fetchWeatherData({
 
   // Adapt 2.5/weather response to the structure expected by the UI
   const adaptedData = {
-    current: data
+    current: {
+      ...data,
+      temp: data.main.temp,
+      feels_like: data.main.feels_like,
+      humidity: data.main.humidity,
+      pressure: data.main.pressure,
+      wind_speed: data.wind.speed,
+      weather: data.weather
+    }
   }
 
   setCacheEntry(queryString, adaptedData)
