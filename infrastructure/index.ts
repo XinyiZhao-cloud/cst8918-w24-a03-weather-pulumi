@@ -3,6 +3,7 @@ import * as resources from '@pulumi/azure-native/resources'
 import * as containerregistry from '@pulumi/azure-native/containerregistry'
 import * as docker from '@pulumi/docker'
 import * as containerinstance from '@pulumi/azure-native/containerinstance'
+import * as redis from '@pulumi/azure-native/redis'
 
 // Import the configuration settings for the current stack.
 const config = new pulumi.Config()
@@ -10,6 +11,7 @@ const appPath = config.get('appPath') || '../'
 const prefixName = config.get('prefixName') || 'cst8918-a03-student'
 const imageName = prefixName
 const imageTag = config.get('imageTag') || 'latest'
+
 // Azure container instances (ACI) service does not yet support port mapping
 // so, the containerPort and publicPort must be the same
 const containerPort = config.getNumber('containerPort') || 80
@@ -19,6 +21,31 @@ const memory = config.getNumber('memory') || 2
 
 // Create a resource group.
 const resourceGroup = new resources.ResourceGroup(`${prefixName}-rg`)
+
+// Create a managed Redis service
+const redisInstance = new redis.Redis(`${prefixName}-redis`, {
+  name: `${prefixName}-weather-cache`,
+  location: 'canadacentral',
+  resourceGroupName: resourceGroup.name,
+  enableNonSslPort: true,
+  redisVersion: 'Latest',
+  minimumTlsVersion: '1.2',
+  redisConfiguration: {
+    maxmemoryPolicy: 'allkeys-lru'
+  },
+  sku: {
+    name: 'Basic',
+    family: 'C',
+    capacity: 0
+  }
+})
+
+// Extract the auth creds from the deployed Redis service
+const redisAccessKey = redis
+  .listRedisKeysOutput({ name: redisInstance.name, resourceGroupName: resourceGroup.name })
+  .apply(keys => keys.primaryKey)
+
+  const redisConnectionString = pulumi.interpolate`rediss://:${redisAccessKey}@${redisInstance.hostName}:${redisInstance.sslPort}`;
 
 // Create the container registry.
 const registry = new containerregistry.Registry(`${prefixName.replace(/-/g, "")}ACR`, {
@@ -87,8 +114,12 @@ const containerGroup = new containerinstance.ContainerGroup(
             value: containerPort.toString()
           },
           {
+            name: "REDIS_URL",
+            value: redisConnectionString,
+          },
+         {
             name: 'WEATHER_API_KEY',
-            value: '253a46b3fee793d7dc71750cb042abc4'
+            value: config.requireSecret('weatherApiKey')
           }
         ],
         resources: {
