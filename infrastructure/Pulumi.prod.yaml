@@ -7,3 +7,5 @@ config:
   cst8918-a03-infra:memory: '2'
   cst8918-a03-infra:prefixName: 'cst8918-a03-mirz0014'
   cst8918-a03-infra:imageTag: v0.2.6
+  cst8918-a03-infra:weatherApiKey:
+    secure: AAABAFVpOl+NqMl6Xz54/M6QOD6HWxOGPV+zhiMxrIVCKoBBJyafDVsL9Uhg09+0G/nHfPZbrYgFNmnmukEtyA==
