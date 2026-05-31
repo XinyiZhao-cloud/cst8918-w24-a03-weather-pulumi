@@ -54,6 +54,7 @@ const redisConnectionString = pulumi.interpolate`rediss://:${redisAccessKey}@${r
 // Create the container registry.
 const registry = new containerregistry.Registry(`${prefixName.replace(/-/g, "")}ACR`, {
     resourceGroupName: resourceGroup.name,
+    location: 'westus3',
     adminUserEnabled: true,
     sku: {
         name: containerregistry.SkuName.Basic
@@ -92,6 +93,7 @@ const containerGroup = new containerinstance.ContainerGroup(
     `${prefixName}-container-group`,
     {
         resourceGroupName: resourceGroup.name,
+        location: 'westus3',
         osType: 'linux',
         restartPolicy: 'always',
         imageRegistryCredentials: [
