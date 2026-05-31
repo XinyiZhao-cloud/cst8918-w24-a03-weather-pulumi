@@ -102,9 +102,10 @@ The Pulumi infrastructure deployment and application configuration were complete
 
 # Screenshots
 
-## Running Application Screenshot
+## Running Application Screenshot (on both sides)
 
 > <img width="975" height="579" alt="image" src="https://github.com/user-attachments/assets/38366999-588d-41a3-8087-55da989d6714" />
+> <img width="1470" height="816" alt="image" src="https://github.com/user-attachments/assets/0a1e9c63-290c-4476-a91c-85b97feadc0f" />
 
 
 ---
@@ -113,5 +114,8 @@ The Pulumi infrastructure deployment and application configuration were complete
 
 > <img width="2172" height="1158" alt="image" src="https://github.com/user-attachments/assets/f04ed22d-5083-453d-af77-99815d6ed41f" />
 
-
 ---
+
+## Terminal
+> <img width="2940" height="1666" alt="image" src="https://github.com/user-attachments/assets/8cd2654f-6ce8-4122-9f3e-ec488d2c2c02" />
+
